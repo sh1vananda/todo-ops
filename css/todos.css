@@ -1,0 +1,156 @@
+/* Todo styles */
+
+/* Todo input */
+.input-group {
+  display: flex;
+  gap: 6px;
+  margin: 10px;
+}
+
+#todoInput,
+#coopTodoInput {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 13px;
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+#addTodo,
+#coopAddTodo {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: #0078d7;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container for todos */
+.todos-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px 10px 10px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Split todos sections with fixed heights */
+.todos-section {
+  height: 180px;
+}
+
+/* Add margin between sections */
+.todos-section:first-child {
+  margin-bottom: 10px;
+}
+
+.todos-section:last-child {
+  height: 140px;
+}
+
+/* Co-op mode adjustments */
+#coopModeContent .todos-section:first-child {
+  height: 160px;
+}
+
+#coopModeContent .todos-section:last-child {
+  height: 120px;
+}
+
+.todos-section h3 {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #999;
+  display: flex;
+  align-items: center;
+}
+
+.todos-section h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #444;
+  margin-left: 8px;
+}
+
+.todo-list {
+  list-style: none;
+  overflow-y: auto;
+  height: calc(100% - 20px);
+  border-radius: 4px;
+  background: #252525;
+  padding: 3px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-bottom: 1px solid #333;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  background: #2d2d2d;
+  transition: background-color 0.2s;
+}
+
+.todo-item:hover {
+  background: #333;
+}
+
+.todo-item.empty {
+  color: #666;
+  justify-content: center;
+  font-style: italic;
+  padding: 10px;
+}
+
+.todo-item .creator-name {
+  font-size: 10px;
+  color: #888;
+  margin-left: 8px;
+  background: #222;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.todo-checkbox {
+  margin-right: 8px;
+  accent-color: #0078d7;
+  cursor: pointer;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 13px;
+  color: #e0e0e0;
+  word-break: break-word;
+}
+
+.todo-text.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.todo-delete {
+  background: none;
+  border: none;
+  color: #ff5252;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 3px;
+  font-size: 14px;
+}

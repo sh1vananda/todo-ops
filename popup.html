@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/todos.css">
+  <link rel="stylesheet" href="css/notes.css">
+  <link rel="stylesheet" href="css/coop.css">
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script src="firebase-app.js"></script>
+  <!-- Firebase Realtime Database -->
+  <script src="firebase-database.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Todo Ops</h1>
+      <div class="mode-toggle">
+        <button id="singleMode" class="mode-btn active">Single</button>
+        <button id="coopMode" class="mode-btn">Co-op</button>
+      </div>
+    </div>
+
+    <!-- Single Mode Content -->
+    <div id="singleModeContent">
+      <div class="tabs">
+        <button id="todosTab" class="tab-btn active">Todos</button>
+        <button id="notesTab" class="tab-btn">Notes</button>
+      </div>
+      <!-- Only one of these two "section" divs will have class="section active" at a time -->
+
+      <!-- Todos Section -->
+      <div id="todosSection" class="section active">
+        <div class="input-group">
+          <input type="text" id="todoInput" placeholder="Add a todo...">
+          <button id="addTodo">+</button>
+        </div>
+        <div class="todos-container">
+          <div class="todos-section">
+            <h3>Active</h3>
+            <ul id="activeTodoList" class="todo-list"></ul>
+          </div>
+          <div class="todos-section">
+            <h3>Completed</h3>
+            <ul id="completedTodoList" class="todo-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Section: is NOT nested inside todos section -->
+      <div id="notesSection" class="section">
+        <textarea id="notesArea" placeholder="Your notes..."></textarea>
+      </div>
+    </div>
+
+    <!-- Co-op Mode Content -->
+    <div id="coopModeContent" class="hidden">
+      <!-- Co-op Not Connected State -->
+      <div id="coopNotConnected">
+        <div class="coop-welcome">
+          <h2>Collaborative Mode</h2>
+          <p>Join a room to collaborate with others in real-time</p>
+        </div>
+        <div class="coop-join-panel">
+          <input type="text" id="userName" placeholder="Your Name">
+          <input type="text" id="roomInput" placeholder="Enter Room ID">
+          <button id="joinRoom">Join Room</button>
+          <button id="createRoom">Create New Room</button>
+        </div>
+      </div>
+
+      <!-- Co-op Connected State -->
+      <div id="coopConnected" class="hidden">
+        <div class="coop-room-header">
+          <div class="room-header-container">
+            <div class="room-header-left">
+              <div class="room-info">
+                <span>Room: <strong id="currentRoomId"></strong></span>
+                <div id="connectionStatus"></div>
+              </div>
+            </div>
+            <div class="room-header-right">
+              <div class="members-dropdown">
+                <button id="membersBtn" class="members-btn">
+                  Members <span id="membersCount" class="members-count">1</span>
+                </button>
+                <div id="membersDropdown" class="members-content">
+                  <!-- Members will be added here dynamically -->
+                </div>
+              </div>
+              <button id="exitRoom" class="exit-btn">Exit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button id="coopTodosTab" class="tab-btn active">Todos</button>
+          <button id="coopNotesTab" class="tab-btn">Notes</button>
+        </div>
+
+        <!-- Co-op Todos Section -->
+        <div id="coopTodosSection" class="section active">
+          <div class="input-group">
+            <input type="text" id="coopTodoInput" placeholder="Add a todo...">
+            <button id="coopAddTodo">+</button>
+          </div>
+          <div class="todos-container">
+            <div class="todos-section">
+              <h3>Active</h3>
+              <ul id="coopActiveTodoList" class="todo-list"></ul>
+            </div>
+            <div class="todos-section">
+              <h3>Completed</h3>
+              <ul id="coopCompletedTodoList" class="todo-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Co-op Notes Section: is NOT nested inside todos section -->
+        <div id="coopNotesSection" class="section">
+          <textarea id="coopNotesArea" placeholder="Collaborative notes..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="firebase-config.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
