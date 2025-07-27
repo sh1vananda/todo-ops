@@ -1,6 +1,6 @@
 // Simple background script for the extension
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('CoTodo extension installed');
+  console.log('Todo Ops extension installed');
 });
 
 // Handle extension icon click

@@ -64,8 +64,6 @@
           <p>Join a room to collaborate with others in real-time</p>
         </div>
         <div class="coop-join-panel">
-          <input type="text" id="userName" placeholder="Your Name">
-          <input type="text" id="roomInput" placeholder="Enter Room ID">
           <button id="joinRoom">Join Room</button>
           <button id="createRoom">Create New Room</button>
         </div>
@@ -127,6 +125,20 @@
   </div>
   <script src="firebase-config.js"></script>
   <script type="module" src="js/app.js"></script>
+
+  <!-- Custom Modal Structure -->
+  <div id="customModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalMessage"></p>
+      <div id="modalInputsContainer"></div>
+      <div class="modal-buttons">
+        <button id="modalConfirmBtn" class="modal-button confirm">OK</button>
+        <button id="modalCancelBtn" class="modal-button cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

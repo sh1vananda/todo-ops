@@ -124,3 +124,102 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* Custom Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #252525;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 300px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  position: relative;
+  color: #e0e0e0;
+}
+
+.close-button {
+  color: #aaa;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: #e0e0e0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-input {
+  width: calc(100% - 20px);
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #333;
+  color: #e0e0e0;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modal-button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.modal-button.confirm {
+  background-color: #0078d7;
+  color: white;
+}
+
+.modal-button.confirm:hover {
+  background-color: #005ea6;
+}
+
+.modal-button.cancel {
+  background-color: #555;
+  color: white;
+}
+
+.modal-button.cancel:hover {
+  background-color: #777;
+}
+
+#modalTitle {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+#modalMessage {
+  margin-bottom: 15px;
+  line-height: 1.4;
+}

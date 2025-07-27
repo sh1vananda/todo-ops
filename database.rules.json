@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
+    "rooms": {
+      "$roomId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "hashedPassword": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "todos": {
+          ".validate": "newData.isNumber() || newData.isString()"
+        },
+        "notes": {
+          ".validate": "newData.isString()"
+        },
+        "presence": {
+          "$userId": {
+            ".read": "auth != null",
+            ".write": "auth != null && $userId === auth.uid"
+          }
+        }
+      }
+    }
+  }
+}

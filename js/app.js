@@ -10,8 +10,9 @@ class TodoApp {
     this.errorHandler = new ErrorHandler();
     this.todoManager = new TodoManager();
     this.notesManager = new NotesManager();
-    this.coopManager = new CoopManager();
-    this.uiManager = new UIManager(this.todoManager, this.notesManager, this.coopManager);
+    this.uiManager = new UIManager(this.todoManager, this.notesManager, null); // Initialize UIManager without coopManager initially
+    this.coopManager = new CoopManager(this.todoManager, this.notesManager, this.uiManager, this.errorHandler);
+    this.uiManager.coopManager = this.coopManager; // Assign coopManager to UIManager after it's created
     
     this.init();
   }
@@ -20,6 +21,7 @@ class TodoApp {
     try {
       // Initialize the application
       this.uiManager.initUI();
+      this.uiManager.hideModal(); // Ensure modal is hidden on load
       this.loadData();
     } catch (error) {
       this.errorHandler.handleError('app initialization', error);
@@ -32,15 +34,14 @@ class TodoApp {
       try {
         this.todoManager.loadTodos(result.singleTodos || [], result.coopTodos || []);
         this.notesManager.loadNotes(result.singleNotes || '', result.coopNotes || '');
-        this.coopManager.loadCoopData(result.userName || '', result.roomId || null);
         
-        // Set initial mode
-        if (result.lastMode) {
-          this.uiManager.setMode(result.lastMode);
-        }
+        // Set initial mode based on lastMode, default to single
+        this.uiManager.setMode(result.lastMode || 'single');
         
-        // Reconnect to room if we were in one
-        if (this.coopManager.roomId && this.uiManager.mode === 'coop') {
+        // Always attempt to reconnect if room data exists, regardless of lastMode
+        if (result.roomId && result.userName) {
+          this.coopManager.roomId = result.roomId; // Set roomId for reconnection
+          this.coopManager.userName = result.userName; // Set userName for reconnection
           this.coopManager.reconnect();
         }
         

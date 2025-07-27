@@ -57,9 +57,6 @@ export class UIManager {
     document.getElementById('joinRoom').addEventListener('click', () => this.coopManager.joinRoom());
     document.getElementById('createRoom').addEventListener('click', () => this.coopManager.createRoom());
     document.getElementById('exitRoom').addEventListener('click', () => this.coopManager.exitRoom());
-    document.getElementById('roomInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') this.coopManager.joinRoom();
-    });
     
     // Members dropdown
     const membersBtn = document.getElementById('membersBtn');
@@ -90,8 +87,69 @@ export class UIManager {
         if (membersDropdown && membersDropdown.classList.contains('show')) {
           membersDropdown.classList.remove('show');
         }
+        // Also hide the custom modal if open
+        this.hideModal();
       }
     });
+
+    // Modal event listeners
+    document.querySelector('#customModal .close-button').addEventListener('click', () => this.hideModal());
+    document.getElementById('modalConfirmBtn').addEventListener('click', () => this.handleModalConfirm());
+    document.getElementById('modalCancelBtn').addEventListener('click', () => this.handleModalCancel());
+  }
+  
+  // New method to show the custom modal
+  showModal(title, message, inputs = [], showCancel = false) {
+    console.log('showModal called', { title, message, inputs, showCancel });
+    return new Promise(resolve => {
+      this.currentModalResolve = resolve; // Store the resolve function
+      const modal = document.getElementById('customModal');
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      
+      const modalInputsContainer = document.getElementById('modalInputsContainer');
+      modalInputsContainer.innerHTML = ''; // Clear previous inputs
+
+      inputs.forEach(inputConfig => {
+        const input = document.createElement('input');
+        input.type = inputConfig.type || 'text';
+        input.id = inputConfig.id;
+        input.placeholder = inputConfig.placeholder || '';
+        input.value = inputConfig.value || '';
+        input.classList.add('modal-input');
+        modalInputsContainer.appendChild(input);
+      });
+
+      document.getElementById('modalCancelBtn').style.display = showCancel ? 'inline-block' : 'none';
+
+      modal.style.display = 'flex'; // Use flex to center content
+    });
+  }
+
+  // New method to hide the custom modal
+  hideModal() {
+    console.log('hideModal called');
+    document.getElementById('customModal').style.display = 'none';
+    this.currentModalResolve = null; // Clear the resolve function
+  }
+
+  handleModalConfirm() {
+    if (this.currentModalResolve) {
+      const inputs = document.querySelectorAll('#modalInputsContainer .modal-input');
+      const result = {};
+      inputs.forEach(input => {
+        result[input.id] = input.value;
+      });
+      this.currentModalResolve(result);
+      this.hideModal();
+    }
+  }
+
+  handleModalCancel() {
+    if (this.currentModalResolve) {
+      this.currentModalResolve(null);
+      this.hideModal();
+    }
   }
   
   setMode(mode) {
@@ -105,13 +163,57 @@ export class UIManager {
     if (mode === 'single') {
       document.getElementById('singleModeContent').classList.remove('hidden');
       document.getElementById('coopModeContent').classList.add('hidden');
-      // Don't automatically exit room when switching to single mode
     } else {
       document.getElementById('singleModeContent').classList.add('hidden');
       document.getElementById('coopModeContent').classList.remove('hidden');
     }
 
     this.saveMode();
+  }
+
+  showCoopConnected(roomId, roomName) {
+    const coopNotConnected = document.getElementById('coopNotConnected');
+    const coopConnected = document.getElementById('coopConnected');
+    const currentRoomIdEl = document.getElementById('currentRoomId');
+
+    if (coopNotConnected) coopNotConnected.classList.add('hidden');
+    if (coopConnected) coopConnected.classList.remove('hidden');
+    if (currentRoomIdEl) currentRoomIdEl.textContent = roomName || roomId; // Display room name or ID
+  }
+
+  showCoopNotConnected() {
+    const coopNotConnected = document.getElementById('coopNotConnected');
+    const coopConnected = document.getElementById('coopConnected');
+    const currentRoomIdEl = document.getElementById('currentRoomId');
+
+    if (coopNotConnected) coopNotConnected.classList.remove('hidden');
+    if (coopConnected) coopConnected.classList.add('hidden');
+    if (currentRoomIdEl) currentRoomIdEl.textContent = ''; // Clear room ID/name
+  }
+
+  updateRoomHeader(roomName, roomId) {
+    const currentRoomIdEl = document.getElementById('currentRoomId');
+    if (currentRoomIdEl) currentRoomIdEl.textContent = `${roomName} (ID: ${roomId})`;
+  }
+
+  updateMembersList(members) {
+    const membersDropdown = document.getElementById('membersDropdown');
+    const membersCountEl = document.getElementById('membersCount');
+
+    if (!membersDropdown || !membersCountEl) return;
+
+    membersDropdown.innerHTML = ''; // Clear previous members
+    membersCountEl.textContent = members.length;
+
+    members.forEach(member => {
+      const memberItem = document.createElement('div');
+      memberItem.className = 'member-item';
+      memberItem.innerHTML = `
+        <div class="member-status active"></div>
+        <div class="member-name">${member.user || 'Anonymous'}</div>
+      `;
+      membersDropdown.appendChild(memberItem);
+    });
   }
   
   setTab(tab) {
@@ -217,11 +319,11 @@ export class UIManager {
         
         // Add event listeners
         li.querySelector('.todo-checkbox').addEventListener('change', () => {
-          this.todoManager.toggleSingleTodo(todo.id);
+          this.todoManager.toggleSingleTodo(parseInt(todo.id));
           this.renderSingleTodos();
         });
         li.querySelector('.todo-delete').addEventListener('click', (e) => {
-          this.todoManager.deleteSingleTodo(e.target.dataset.id);
+          this.todoManager.deleteSingleTodo(parseInt(e.target.dataset.id));
           this.renderSingleTodos();
         });
       });
@@ -246,11 +348,11 @@ export class UIManager {
         
         // Add event listeners
         li.querySelector('.todo-checkbox').addEventListener('change', () => {
-          this.todoManager.toggleSingleTodo(todo.id);
+          this.todoManager.toggleSingleTodo(parseInt(todo.id));
           this.renderSingleTodos();
         });
         li.querySelector('.todo-delete').addEventListener('click', (e) => {
-          this.todoManager.deleteSingleTodo(e.target.dataset.id);
+          this.todoManager.deleteSingleTodo(parseInt(e.target.dataset.id));
           this.renderSingleTodos();
         });
       });
@@ -291,14 +393,14 @@ export class UIManager {
         
         // Add event listeners
         li.querySelector('.todo-checkbox').addEventListener('change', () => {
-          this.todoManager.toggleCoopTodo(todo.id);
+          this.todoManager.toggleCoopTodo(parseInt(todo.id));
           this.renderCoopTodos();
           if (this.coopManager.roomRef) {
             this.coopManager.updateRoom();
           }
         });
         li.querySelector('.todo-delete').addEventListener('click', (e) => {
-          this.todoManager.deleteCoopTodo(e.target.dataset.id);
+          this.todoManager.deleteCoopTodo(parseInt(e.target.dataset.id));
           this.renderCoopTodos();
           if (this.coopManager.roomRef) {
             this.coopManager.updateRoom();
@@ -331,14 +433,14 @@ export class UIManager {
         
         // Add event listeners
         li.querySelector('.todo-checkbox').addEventListener('change', () => {
-          this.todoManager.toggleCoopTodo(todo.id);
+          this.todoManager.toggleCoopTodo(parseInt(todo.id));
           this.renderCoopTodos();
           if (this.coopManager.roomRef) {
             this.coopManager.updateRoom();
           }
         });
         li.querySelector('.todo-delete').addEventListener('click', (e) => {
-          this.todoManager.deleteCoopTodo(e.target.dataset.id);
+          this.todoManager.deleteCoopTodo(parseInt(e.target.dataset.id));
           this.renderCoopTodos();
           if (this.coopManager.roomRef) {
             this.coopManager.updateRoom();
